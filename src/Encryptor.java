@@ -143,13 +143,12 @@ public class Encryptor
 
         for (int i = 0; i < numBlocks; i++)
         {
-            for (int j = 0; j < blockSize; j = j + numRows)
+            for (int j = 0; j < numRows; j++)
             {
-                decryption += encryptedMessage.substring((i * blockSize) + j, (i * blockSize) + j + 1);
-            }
-            for (int j = 1; j < blockSize; j = j + numRows)
-            {
-                decryption += encryptedMessage.substring((i * blockSize) + j, (i * blockSize) + j + 1);
+                for (int k = j; k < blockSize; k = k + numRows)
+                {
+                    decryption += encryptedMessage.substring((i * blockSize) + k, (i * blockSize) + k + 1);
+                }
             }
         }
 

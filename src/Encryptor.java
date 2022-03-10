@@ -32,15 +32,15 @@ public class Encryptor
      */
     public void fillBlock(String str)
     {
-        int numBlock = 0;
+        int numCells = 0;
         for (int i = 0; i < numRows; i++)
         {
             for (int j = 0; j < numCols; j++)
             {
-                if (numBlock < str.length())
+                if (numCells < str.length())
                 {
-                    letterBlock[i][j] = str.substring(numBlock, numBlock + 1);
-                    numBlock++;
+                    letterBlock[i][j] = str.substring(numCells, numCells + 1);
+                    numCells++;
                 }
                 else
                 {
@@ -77,14 +77,32 @@ public class Encryptor
      */
     public String encryptMessage(String message)
     {
-        String encryption = "";
-        for (int i = 0; i < numRows; i++)
+        int numCells = 0;
+        int blockSize = numRows * numCols;
+        int numBlocks = message.length() / blockSize;
+
+        if (message.length() % blockSize > 0)
         {
-            for (int k = i; k < message.length(); k = k + numRows)
-            {
-                encryption += message.substring(k, k + 1);
-            }
+            numBlocks++;
         }
+
+        String encryption = "";
+
+        for (int i = 0; i < numBlocks; i++)
+        {
+            if (message.length() - numCells < blockSize)
+            {
+                fillBlock(message.substring((i * blockSize), (i * blockSize) + blockSize));
+                numCells += blockSize;
+            }
+            else
+            {
+                fillBlock(message.substring((i * blockSize), (i * blockSize) + (message.length() - (i * blockSize))));
+            }
+
+            encryption += encryptBlock();
+        }
+
         return encryption;
     }
 
@@ -112,17 +130,34 @@ public class Encryptor
      */
     public String decryptMessage(String encryptedMessage)
     {
-        String decryption = "";
-        for (int i = 0; i < numRows; i++)
+        int numCells = 0;
+        int blockSize = numRows * numCols;
+        int numBlocks = encryptedMessage.length() / blockSize;
+
+        if (encryptedMessage.length() % blockSize > 0)
         {
-            for (int j = i; j < encryptedMessage.length(); j = j + numRows)
+            numBlocks++;
+        }
+
+        String decryption = "";
+
+        for (int i = 0; i < numBlocks; i++)
+        {
+            for (int j = 0; j < blockSize; j = j + numRows)
             {
-                if (!(encryptedMessage.substring(j, j + 1).equals("A")))
-                {
-                    decryption += encryptedMessage.substring(j, j + 1);
-                }
+                decryption += encryptedMessage.substring((i * blockSize) + j, (i * blockSize) + j + 1);
+            }
+            for (int j = 1; j < blockSize; j = j + numRows)
+            {
+                decryption += encryptedMessage.substring((i * blockSize) + j, (i * blockSize) + j + 1);
             }
         }
+
+        if (decryption.substring((numBlocks * blockSize) - blockSize).indexOf("A") != -1)
+        {
+            decryption = decryption.substring(0, ((numBlocks * blockSize) - blockSize) + decryption.substring((numBlocks * blockSize) - blockSize).indexOf("A"));
+        }
+
         return decryption;
     }
 }

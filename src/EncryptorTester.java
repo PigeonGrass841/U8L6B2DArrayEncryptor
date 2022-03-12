@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class EncryptorTester {
     public static void main(String[] args) {
@@ -274,6 +275,54 @@ public class EncryptorTester {
             System.out.println("\n*** Test 5 FAILED! ***");
             System.out.println("EXPECTED: " + expectedDecrypted6);
             System.out.println("  ACTUAL: " + actualDecrypted6);
+        }
+
+        Scanner input = new Scanner(System.in);
+        String choice = "";
+
+        while (!(choice.equals("q")))
+        {
+            System.out.println("\n---------------\n");
+
+            System.out.print("Would you like to [e]ncrypt or [d]ecrypt a string?: ");
+            String crypt = input.nextLine();
+
+            if (crypt.equals("e"))
+            {
+                System.out.print("Give a string to encrypt: ");
+                String text = input.nextLine();
+
+                System.out.print("How many rows for each encryption block?: ");
+                int rows = input.nextInt();
+
+                System.out.print("How many columns for each encryption block?: ");
+                int cols = input.nextInt();
+
+                Encryptor key = new Encryptor(rows, cols);
+                String encryption = key.encryptMessage(text);
+
+                System.out.println(encryption);
+            }
+
+            if (crypt.equals("d")) {
+                System.out.print("Give a string to decrypt: ");
+                String text = input.nextLine();
+
+                System.out.print("How many rows for each decryption block?: ");
+                int rows = input.nextInt();
+
+                System.out.print("How many columns for each decryption block?: ");
+                int cols = input.nextInt();
+
+                Encryptor key = new Encryptor(rows, cols);
+                String decryption = key.decryptMessage(text);
+
+                System.out.println(decryption);
+            }
+
+            System.out.print("Would you like to [q]uit or [c]ontinue?: ");
+            input.nextLine();
+            choice = input.nextLine();
         }
     }
 

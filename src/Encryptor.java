@@ -147,7 +147,10 @@ public class Encryptor
             {
                 for (int k = j; k < blockSize; k = k + numRows)
                 {
-                    decryption += encryptedMessage.substring((i * blockSize) + k, (i * blockSize) + k + 1);
+                    if ((i * blockSize) + k + 1 < encryptedMessage.length())
+                    {
+                        decryption += encryptedMessage.substring((i * blockSize) + k, (i * blockSize) + k + 1);
+                    }
                 }
             }
         }
